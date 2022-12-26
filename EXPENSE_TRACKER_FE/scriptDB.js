@@ -4,11 +4,11 @@ const form = document.getElementById('myform');
 //userlist
 const userList = document.getElementById('userlist');
 
-//crudURDL
+
 var url = "http://localhost:4000";
 
 //event listner1
-form.addEventListener('submit',addUser);
+form.addEventListener('submit',addExpense);
 
 //event DOMreload
 window.addEventListener('DOMContentLoaded',async ()=>{
@@ -32,7 +32,7 @@ window.addEventListener('DOMContentLoaded',async ()=>{
 
 
 
-function addUser(event){
+function addExpense(event){
 
     
     event.preventDefault();
@@ -49,10 +49,12 @@ function addUser(event){
 
             const prom = await axios.post(`${url}/addexpense`,data);
             //console.log(prom.data);
-            displayData(prom.data.value);
+            displayData(prom.data.value); //prom.data.value recieves the data from the server including the id and passed to displayData function !
         }
         catch(err){
-            console.log(err);
+
+            alert(err.response.data.message);
+
         }
     }
    postData(data);
@@ -64,23 +66,23 @@ function displayData(data){
     let li = document.createElement('li');
     li.setAttribute('id',data.id); // setting this att value for the new li item helps us to grab an html element and delete it
     li.innerHTML =`${data.expenseval}   ${data.description}  ${data.category}
-     <button id="edit" onClick=editUser('${data.expenseval}','${data.description}','${data.category}','${data.id}')>edit</button> 
-     <button id="delete" onClick=deleteUser('${data.id}')>delete</button>`;
+     <button id="edit" onClick=editExpense('${data.expenseval}','${data.description}','${data.category}','${data.id}')>edit</button> 
+     <button id="delete" onClick=deleteExpense('${data.id}')>delete</button>`;
     userList.appendChild(li);
     console.log(data);
 
 }
 
-function editUser(expenseval,desc,cat,id){
+function editExpense(expenseval,desc,cat,id){
 
     //copyback to text fields
     document.getElementById('expenseval').value = expenseval;
     document.getElementById('desc').value = desc;
     document.getElementById('cat').value = cat;
 
-    deleteUser(id);
+    deleteExpense(id);
 }
-async function deleteUser(id){
+async function deleteExpense(id){
 
     const liToDelete = userList.querySelector('[id="'+id+'"]');//grabbing the li element
 
